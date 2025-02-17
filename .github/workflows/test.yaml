@@ -1,0 +1,2 @@
+name: Test Playwright Scripts
+on: workflow_dispatch
