@@ -1,13 +1,19 @@
 import { test, expect } from "../fixtures/projectFixtures";
 import { CommonUtils } from "../utils/commonUtils";
+import data from './../data/data.json';
+
+let commonUtils: CommonUtils
+let username: string
+let password: string
 
 test.beforeEach(async ({ navigationPageMethods, page }) => {
     await navigationPageMethods.goToLoginURL();
+    commonUtils = new CommonUtils(page);
+    username = data.users[0].username;
+    password = data.users[0].password;
 });
 
 test('Verify the login page components', async ({ loginPageMethods, page }) => {
-
-    let commonUtils: CommonUtils = new CommonUtils(page)
     expect(await commonUtils.isElementVisible(await loginPageMethods.getUsername()));
     expect(await commonUtils.isElementVisible(await loginPageMethods.getPassword()));
     expect(await commonUtils.isElementVisible(await loginPageMethods.getLoginButton()));
@@ -16,11 +22,11 @@ test('Verify the login page components', async ({ loginPageMethods, page }) => {
 });
 
 test('Incorrect login credentials throws error', async ({ loginPageMethods, page }) => {
-    await loginPageMethods.login("test_user", "secret_sauce");
+    await loginPageMethods.login(commonUtils.encryptCredentials(username), commonUtils.encryptCredentials(password));
     expect(await loginPageMethods.getErrorMessage()).toBe("Epic sadface: Username and password do not match any user in this service");
 });
 
 test('Login to the application with valid credentials', async ({ loginPageMethods, homePageMethods, page }) => {
-    await loginPageMethods.login("standard_user", "secret_sauce");
+    await loginPageMethods.login(commonUtils.encryptCredentials(username), commonUtils.encryptCredentials(password));
     expect(await homePageMethods.getHomePageHeader()).toBe("Swag Labs");
 });

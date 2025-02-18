@@ -1,14 +1,17 @@
 import { Locator, Page } from '@playwright/test';
 import { LoginPage } from '../pageobjects/LoginPage';
+import { CommonUtils } from '../utils/commonUtils';
 
 export class LoginPageMethods {
 
     loginPage: LoginPage;
     page: Page;
+    commonUtils: CommonUtils;
 
     constructor(page: Page) {
         this.loginPage = new LoginPage(page);
         this.page = page;
+        this.commonUtils = new CommonUtils(page);
     }
 
     async getUsername(): Promise<Locator> {
@@ -40,9 +43,11 @@ export class LoginPageMethods {
     }
 
     async login(username: string, password: string): Promise<any> {
+        let dusername = this.commonUtils.decryptCredentials(username);
+        await this.enterUsername(dusername);
 
-        await this.enterUsername(username);
-        await this.enterPassword(password);
+        let dpassword = this.commonUtils.decryptCredentials(password)
+        await this.enterPassword(dpassword);
         await this.clickLoginButton();
     }
 

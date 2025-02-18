@@ -1,13 +1,21 @@
 import { test, expect } from "../fixtures/projectFixtures";
 import { CommonUtils } from "../utils/commonUtils";
+import data from '../data/data.json';
+const CryptoJS = require('crypto-js');
+
+let commonUtils: CommonUtils
+let username: string
+let password: string
 
 test.beforeEach(async ({ navigationPageMethods, page }) => {
     await navigationPageMethods.goToLoginURL();
+    commonUtils = new CommonUtils(page);
+    username = data.users[0].username;
+    password = data.users[0].password;
 });
 
 test('Verify the homepage components', async ({ loginPageMethods, page, homePageMethods }) => {
-    let commonUtils: CommonUtils = new CommonUtils(page);
-    await loginPageMethods.login("standard_user", "secret_sauce");
+    await loginPageMethods.login(commonUtils.encryptCredentials(username), commonUtils.encryptCredentials(password));
     expect(await homePageMethods.getHomePageHeader()).toBe("Swag Labs");
     expect(await homePageMethods.getHomePageProductHeader()).toBe("Products");
     commonUtils.isElementVisible(await homePageMethods.getProductSelectList());
@@ -16,8 +24,8 @@ test('Verify the homepage components', async ({ loginPageMethods, page, homePage
 
 test('Add a product to card', async ({ loginPageMethods, page, homePageMethods,
     yourCartPageMethods, checkoutPageMethods, checkoutOverviewPageMethods, checkoutCompletePageMethods }) => {
-
-    await loginPageMethods.login("standard_user", "secret_sauce");
+    const eusername = commonUtils.encryptCredentials(username);
+    await loginPageMethods.login(commonUtils.encryptCredentials(username), commonUtils.encryptCredentials(password));
     let productName = await homePageMethods.getSauceLabsBackPackItemName();
     let productPrice = await homePageMethods.getSauceLabsBackPackPrice();
 
