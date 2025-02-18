@@ -24,7 +24,7 @@ test('Verify the login page components', async ({ loginPageMethods, page }) => {
     expect(await loginPageMethods.getPassword()).toHaveAttribute("placeholder");
 });
 
-test.only('Incorrect login credentials throws error', async ({ loginPageMethods, page }) => {
+test('Incorrect login credentials throws error', async ({ loginPageMethods, page }) => {
     await loginPageMethods.login(commonUtils.encryptCredentials(incorrect_username), commonUtils.encryptCredentials(password));
     expect(await loginPageMethods.getErrorMessage()).toBe("Epic sadface: Username and password do not match any user in this service");
 });
