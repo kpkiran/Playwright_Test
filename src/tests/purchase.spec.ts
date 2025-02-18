@@ -14,7 +14,7 @@ test('Verify the homepage components', async ({ loginPageMethods, page, homePage
     expect(await homePageMethods.getSauceLabsBackPackAddToCart()).toBe('Add to cart');
 });
 
-test.only('Add a product to card', async ({ loginPageMethods, page, homePageMethods,
+test('Add a product to card', async ({ loginPageMethods, page, homePageMethods,
     yourCartPageMethods, checkoutPageMethods, checkoutOverviewPageMethods, checkoutCompletePageMethods }) => {
 
     await loginPageMethods.login("standard_user", "secret_sauce");
